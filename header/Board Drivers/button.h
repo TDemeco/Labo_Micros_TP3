@@ -48,7 +48,7 @@ typedef enum{
  * FUNCTION PROTOTYPES WITH GLOBAL SCOPE
  ******************************************************************************/
 /**
- * @brief Initializes de button driver
+ * @brief Initializes the button driver
  */
 void buttonInit(void);
 /**

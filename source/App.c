@@ -1,7 +1,7 @@
 /***************************************************************************//**
   @file     App.c
-  @brief    Application functions
-  @author   Nicolás Magliola
+  @brief    Application
+  @author   Tobias Demeco
  ******************************************************************************/
 
 #define MYDEBUG false
@@ -10,15 +10,14 @@
  * INCLUDE HEADER FILES
  ******************************************************************************/
 
-#include "FSM.h"
-#include "FSMTable.h"
-#include "led_module.h"
-#include "validation.h"
-#include "encoder_board_app.h"
-#include "timer.h"
-#include "sevenseg.h"
-#include "magnetic_app.h"
-#include "led_rgb.h"
+#include "header/FSM/FSM.h"
+#include "header/FSM/FSMTable.h"
+
+#include "header/Validation/validation.h"
+
+#include "header/Board Drivers/timer.h"
+
+
 
 /*******************************************************************************
  * CONSTANT AND MACRO DEFINITIONS USING #DEFINE

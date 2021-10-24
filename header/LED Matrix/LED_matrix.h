@@ -4,25 +4,32 @@
   @author   Nicolás Magliola
  ******************************************************************************/
 
-#ifndef _MAGNETIC_H_
-#define _MAGNETIC_H_
+#ifndef _LED_MATRIX_H_
+#define _LED_MATRIX_H_
 
 /*******************************************************************************
  * INCLUDE HEADER FILES
  ******************************************************************************/
 
-#include <stdio.h>
+#include <stdint.h>
+#include <stdbool.h>
+
 
 /*******************************************************************************
  * CONSTANT AND MACRO DEFINITIONS USING #DEFINE
  ******************************************************************************/
 
-typedef enum {UNINITIALIZED_M,DISABLED_M,WAITING_M,READING_M,INVALID_DATA_M,NEW_VALID_DATA_M}READING_STATE;
+
 
 /*******************************************************************************
  * ENUMERATIONS AND STRUCTURES AND TYPEDEFS
  ******************************************************************************/
 
+typedef struct{
+	uint8_t r;
+	uint8_t g;
+	uint8_t b;
+} color_t;
 
 /*******************************************************************************
  * VARIABLE PROTOTYPES WITH GLOBAL SCOPE
@@ -32,14 +39,13 @@ typedef enum {UNINITIALIZED_M,DISABLED_M,WAITING_M,READING_M,INVALID_DATA_M,NEW_
  * FUNCTION PROTOTYPES WITH GLOBAL SCOPE
  ******************************************************************************/
 
-void init_magnetic(void);
-void enable_reading(void);
-void disable_reading(void);
-READING_STATE get_state(void);
-volatile const char* get_data(void); //llamar solo si get_sate devuelve NEW_VALID_DATA_M, sino, podria devolver NULL
+void LED_matrix_init(void);
+void LED_matrix_set_rgb(uint8_t row, uint8_t col, uint8_t r,uint8_t g,uint8_t b);
+void LED_matrix_set_color(uint8_t row, uint8_t col, color_t color);
 
 
 /*******************************************************************************
  ******************************************************************************/
 
-#endif
+#endif // _LED_MATRIX_H_
+

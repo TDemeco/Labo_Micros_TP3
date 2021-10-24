@@ -1,47 +1,54 @@
 /***************************************************************************//**
-  @file     sevenseg.h
-  @brief    Simple GPIO Pin services, similar to Arduino
-  @author   Nicolás Magliola
+  @file     event_handler.h
+  @brief    Interface of event handler
+  @author   Tobias Demeco
  ******************************************************************************/
 
-#ifndef _SEVENSEG_H_
-#define _SEVENSEG_H_
+#ifndef _EVENTH_H_
+#define _EVENTH_H_
+
 /*******************************************************************************
  * INCLUDE HEADER FILES
  ******************************************************************************/
 
 #include <stdint.h>
 #include <stdbool.h>
-
+#include <stdio.h>
 
 /*******************************************************************************
  * CONSTANT AND MACRO DEFINITIONS USING #DEFINE
  ******************************************************************************/
 
+//EVENTS
+#define EOT -1
 
 /*******************************************************************************
  * ENUMERATIONS AND STRUCTURES AND TYPEDEFS
  ******************************************************************************/
-
-typedef enum {DISPLAY_LEFT, DISPLAY_RIGHT, DISPLAY_SCROLL, MODES_SEVENSEG_CANT} sevenseg_modes;
-
+typedef struct state_diagram_edge State_Type;
+struct state_diagram_edge
+{
+  encoderBoardAppEvents event;
+  State_Type *next_state;
+  void (*p_action)(State_Type** p_table);
+};
 /*******************************************************************************
  * VARIABLE PROTOTYPES WITH GLOBAL SCOPE
  ******************************************************************************/
-
 
 /*******************************************************************************
  * FUNCTION PROTOTYPES WITH GLOBAL SCOPE
  ******************************************************************************/
 
-void display_init(void);
-void display_text(char* text, sevenseg_modes mode, uint8_t blinking_char);      //use
-void display_refresh(void);
-void display_intensity(uint8_t intensity);                                      //use
-void display_clear(void);
+/**
+ * @brief Configures the specified pin to behave either as an input or an output
+ * @param pin the pin whose mode you wish to set (according PORTNUM2PIN)
+ * @param mode INPUT, OUTPUT, INPUT_PULLUP or INPUT_PULLDOWN.
+ */
+
+State_Type* fsm(State_Type *p_table , encoderBoardAppEvents event);
 
 /*******************************************************************************
  ******************************************************************************/
 
-#endif // _SEVENSEG_H_
-
+#endif // _EVENTH_H_

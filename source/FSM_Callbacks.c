@@ -1,20 +1,19 @@
 /***************************************************************************//**
   @file     FSM_Callbacks.c
-  @brief    //
-  @author   Matias Tripoli - Tobias Demeco
+  @brief    Callback functions for each event
+  @author   Tobias Demeco
  ******************************************************************************/
 
 /*******************************************************************************
  * INCLUDE HEADER FILES
  ******************************************************************************/  
 
-#include "FSM_Callbacks.h"
-#include "FSMTable.h"
-#include "led_module.h"
-#include "led_rgb.h"
-#include "validation.h"
-#include "magnetic_app.h"
-#include "sevenseg_app.h"
+#include "header/FSM/FSMTable.h"
+#include "header/FSM/FSM_Callbacks.h"
+
+
+#include "header/Validation/validation.h"
+
 
 /*******************************************************************************
  * CONSTANT AND MACRO DEFINITIONS USING #DEFINE
