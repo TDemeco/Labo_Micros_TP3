@@ -19,10 +19,10 @@ State_Type access[]=
 /*** Modify ***/
 State_Type modify[]=
 {//Event        State           Action
-{NO_ENCODER_BOARD_APP_EVENT,      modify,         nothing},
+{NO_ENCODER_BOARD_APP_EVENT,       modify,         nothing},
 {ENCODER_BOARD_APP_RIGHT,         options,        to_options},
 {ENCODER_BOARD_APP_LEFT,          access,         to_access},
-{ENCODER_BOARD_APP_ENTER,         card,           to_card_mod},           //Aca capaz habria que ver como diferenciar cuando se entra a card por access o por modify
+{ENCODER_BOARD_APP_ENTER,         card,           to_card},           //Aca capaz habria que ver como diferenciar cuando se entra a card por access o por modify
 {ENCODER_BOARD_APP_BACKSPACE,     modify,         nothing},
 {ENCODER_BOARD_APP_DELETE,        modify,         nothing},
 {ENCODER_BOARD_APP_ESCAPE,        modify,         nothing},
@@ -46,10 +46,10 @@ State_Type options[]=
 /*** ADMIN MENU ***/
 State_Type add_id[]=
 {//Event        State           Action
-{NO_ENCODER_BOARD_APP_EVENT,       add_id,         nothing},
-{ENCODER_BOARD_APP_RIGHT,         del_id,        to_options},
-{ENCODER_BOARD_APP_LEFT,          mod_id,         to_access},
-{ENCODER_BOARD_APP_ENTER,         card,           to_card_admin},           //Aca capaz habria que ver como diferenciar cuando se entra a card por access o por modify
+{NO_ENCODER_BOARD_APP_EVENT,      add_id,         nothing},
+{ENCODER_BOARD_APP_RIGHT,         del_id,         to_del},
+{ENCODER_BOARD_APP_LEFT,          unblock_id,         to_unblock},
+{ENCODER_BOARD_APP_ENTER,         card,           to_card},           //Aca capaz habria que ver como diferenciar cuando se entra a card por access o por modify
 {ENCODER_BOARD_APP_BACKSPACE,     add_id,         nothing},
 {ENCODER_BOARD_APP_DELETE,        add_id,         nothing},
 {ENCODER_BOARD_APP_ESCAPE,        access,         logoff},
@@ -58,10 +58,10 @@ State_Type add_id[]=
 
 State_Type del_id[]=
 {//Event        State           Action
-{NO_ENCODER_BOARD_APP_EVENT,       del_id,         nothing},
-{ENCODER_BOARD_APP_RIGHT,         mod_id,        to_options},
-{ENCODER_BOARD_APP_LEFT,          add_id,         to_access},
-{ENCODER_BOARD_APP_ENTER,         card,           to_card_admin},           //Aca capaz habria que ver como diferenciar cuando se entra a card por access o por modify
+{NO_ENCODER_BOARD_APP_EVENT,      del_id,         nothing},
+{ENCODER_BOARD_APP_RIGHT,         mod_id,        to_mod},
+{ENCODER_BOARD_APP_LEFT,          add_id,         to_add},
+{ENCODER_BOARD_APP_ENTER,         card,           to_card},           //Aca capaz habria que ver como diferenciar cuando se entra a card por access o por modify
 {ENCODER_BOARD_APP_BACKSPACE,     del_id,         nothing},
 {ENCODER_BOARD_APP_DELETE,        del_id,         nothing},
 {ENCODER_BOARD_APP_ESCAPE,        access,         logoff},
@@ -70,12 +70,24 @@ State_Type del_id[]=
 
 State_Type mod_id[]=
 {//Event        State           Action
-{NO_ENCODER_BOARD_APP_EVENT,       mod_id,         nothing},
-{ENCODER_BOARD_APP_RIGHT,         add_id,        to_options},
-{ENCODER_BOARD_APP_LEFT,          del_id,         to_access},
-{ENCODER_BOARD_APP_ENTER,         card,           to_card_admin},           //Aca capaz habria que ver como diferenciar cuando se entra a card por access o por modify
+{NO_ENCODER_BOARD_APP_EVENT,      mod_id,         nothing},
+{ENCODER_BOARD_APP_RIGHT,         unblock_id,        to_unblock},
+{ENCODER_BOARD_APP_LEFT,          del_id,         to_del},
+{ENCODER_BOARD_APP_ENTER,         card,           to_card},           //Aca capaz habria que ver como diferenciar cuando se entra a card por access o por modify
 {ENCODER_BOARD_APP_BACKSPACE,     mod_id,         nothing},
 {ENCODER_BOARD_APP_DELETE,        mod_id,         nothing},
+{ENCODER_BOARD_APP_ESCAPE,        access,         logoff},
+{EOT,           mod_id,         nothing},
+};
+
+State_Type unblock_id[]=
+{//Event        State           Action
+{NO_ENCODER_BOARD_APP_EVENT,      unblock_id,         nothing},
+{ENCODER_BOARD_APP_RIGHT,         add_id,        to_add},
+{ENCODER_BOARD_APP_LEFT,          mod_id,         to_mod},
+{ENCODER_BOARD_APP_ENTER,         card,           to_card},           //Aca capaz habria que ver como diferenciar cuando se entra a card por access o por modify
+{ENCODER_BOARD_APP_BACKSPACE,     unblock_id,         nothing},
+{ENCODER_BOARD_APP_DELETE,        unblock_id,         nothing},
 {ENCODER_BOARD_APP_ESCAPE,        access,         logoff},
 {EOT,           mod_id,         nothing},
 };

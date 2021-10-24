@@ -67,6 +67,12 @@ void encoderBoardInit(void){
 	boardEncoder = getEncoderID(ENC_A, ENC_B);							//Register rotary encoder
 	boardTimer = timerGetId();											//Start onboard timer
 	timerStart(boardTimer, TIMER_MS2TICKS(ENCODER_BOARD_TIMER_MS), TIM_MODE_PERIODIC, encoderBoardUpdate);	//Periodically scan for new events
+
+	gpioMode(STATUS_0,OUTPUT,DSE_DEFAULT,ODE_DEFAULT,SRE_DEFAULT,PFE_DEFAULT,DFE_DEFAULT,0);
+	gpioWrite(STATUS_0, 0);
+	gpioMode(STATUS_1,OUTPUT,DSE_DEFAULT,ODE_DEFAULT,SRE_DEFAULT,PFE_DEFAULT,DFE_DEFAULT,0);
+	gpioWrite(STATUS_1, 0);
+
 }
  /**
   * @brief Read the oldest event in the encoder board, then deletes it
@@ -103,7 +109,7 @@ void boardLEDTurnOn(boardLED led){
 void boardLEDTurnOff(void){
 	//See board schematic and 74HC139 datasheet
 	gpioWrite(STATUS_0, LOW);
-	gpioWrite(STATUS_1, HIGH);
+	gpioWrite(STATUS_1, LOW);
 }
 /*******************************************************************************
  *******************************************************************************

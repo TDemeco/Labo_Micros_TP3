@@ -9,7 +9,7 @@
  ******************************************************************************/
 
 #include "led_module.h"
-#include "sevenseg.h" (Cuando tengamos el driver del led tenemos que modificar este archivo para usarlo)
+#include "sevenseg.h"
 
 /*******************************************************************************
  * CONSTANT AND MACRO DEFINITIONS USING #DEFINE
@@ -35,8 +35,8 @@ static uint8_t intensity = 10;
 void printLED(const char* msg)
 {
     display_text(msg, DISPLAY_SCROLL, 4);           //rutina de sevenseg
-    printf(msg);
-    printf("\n");
+    //printf(msg);
+    //printf("\n");
     return;
 }
 
@@ -45,7 +45,7 @@ void changeLEDIntensity(uint8_t newIntensity)
 {
     intensity = newIntensity;
     display_intensity(intensity);                   //rutina de sevenseg  
-    printf ("LED Intensity: %d\n", intensity);
+    //printf ("LED Intensity: %d\n", intensity);
     return;
 }
 

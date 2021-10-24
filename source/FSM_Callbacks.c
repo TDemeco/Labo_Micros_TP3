@@ -10,17 +10,18 @@
 
 #include "FSM_Callbacks.h"
 #include "FSMTable.h"
-#include "card_module.h"
 #include "led_module.h"
 #include "led_rgb.h"
 #include "validation.h"
 #include "magnetic_app.h"
+#include "sevenseg_app.h"
 
 /*******************************************************************************
  * CONSTANT AND MACRO DEFINITIONS USING #DEFINE
  ******************************************************************************/
 
-typedef enum {ADD, DEL, MOD, ACCESS} ADMIN_STATE;
+typedef enum {ADD, DEL, MOD, ACCESS, UNBLOCK} ADMIN_STATE;
+
 /*******************************************************************************
  * CONSTANTS
  ******************************************************************************/
@@ -37,6 +38,7 @@ static uint8_t index = 0;
 
 static bool valid_id = false;
 static bool valid_pin = false;
+static uint8_t pin_attemps = 0;
 
 static bool modifying = false;
 static ADMIN_STATE admin_state = ACCESS;
@@ -66,6 +68,7 @@ void clean (State_Type** p_state)
     index = 0;
     valid_id = false;
     valid_pin = false;
+    //modifying = false;
 }
 
 
@@ -74,16 +77,22 @@ void to_access (State_Type** p_state)
 {
     printLED("ACCESS");             //llamado a rutina de sevenseg
     clean(p_state);
+    modifying = false;
+    change_led_state(BLACK);
 }
 void to_modify (State_Type** p_state)
 {
     printLED("MODIFY");             //llamado a rutina de sevenseg
     clean(p_state);
+    modifying = true;
+    change_led_state(BLACK);
 }
 void to_options (State_Type** p_state)
 {
     printLED("OPTIONS");             //llamado a rutina de sevenseg
     clean(p_state);
+    modifying = false;
+    change_led_state(BLACK);
 }
 
 
@@ -104,7 +113,7 @@ void brightness_up(State_Type** p_state)
     brightness++;
     changeLEDIntensity(brightness);             //llamado a rutina de sevenseg
     printLED("NEW BRIGHTNESS");         //llamado a rutina de sevenseg
-    printf("gg izi %d",brightness);
+
 }
 void brightness_down(State_Type** p_state)
 {
@@ -113,23 +122,13 @@ void brightness_down(State_Type** p_state)
     brightness--;
     changeLEDIntensity(brightness);             //llamado a rutina de sevenseg
     printLED("NEW BRIGHTNESS");         //llamado a rutina de sevenseg
-    printf("gg izi %d",brightness);
+
 }
 
 //Access menu callbacks
-void to_card_mod(State_Type** p_state)
-{
-    printLED("BY CARD");              //llamado a rutina de sevenseg
-    modifying = true;
-    clean(p_state);
-}
 void to_card(State_Type** p_state)
 {
     printLED("BY CARD");              //llamado a rutina de sevenseg
-    if(*p_state == modify)
-        modifying = true;
-    else
-        modifying = false;
     clean(p_state);
 }
 void to_manual(State_Type** p_state)
@@ -146,27 +145,35 @@ void to_input_id(State_Type** p_state)
 
 
 /*** Admin menu callbacks ***/
-void to_card_admin(State_Type** p_state)
+void to_add (State_Type** p_state)
 {
-    if(*p_state == add_id)
-    {
-        admin_state = ADD;
-        to_card(p_state);
-    }
-    else if (*p_state == del_id)
-    {
-        admin_state = DEL;
-        to_card(p_state);
-    }
-    else
-    {
-        admin_state = MOD;
-        to_card(p_state);
-    }
+    printLED("ADD USER");             //llamado a rutina de sevenseg
+    clean(p_state);
+    admin_state = ADD;
+}
+void to_del (State_Type** p_state)
+{
+    printLED("DEL USER");             //llamado a rutina de sevenseg
+    clean(p_state);
+    admin_state = DEL;
+}
+void to_mod (State_Type** p_state)
+{
+    printLED("MODIFY PIN");             //llamado a rutina de sevenseg
+    clean(p_state);
+    admin_state = MOD;
+}
+void to_unblock (State_Type** p_state)
+{
+    printLED("UNBLOCK USER");
+    clean(p_state);
+    admin_state = UNBLOCK;
 }
 void logoff(State_Type** p_state)
 {
+    change_led_state(BLACK);
     admin_state = ACCESS;
+    modifying = false;
     clean(p_state);
 }
 
@@ -201,7 +208,7 @@ void read_card(State_Type** p_state)
         case INVALID_DATA_MA:                   
             printLED("SWIPE AGAIN");            //llamado a rutina de sevenseg
             break;
-        case NEW_VALID_DATA_MA: 
+        case NEW_VALID_DATA_MA: ;
             uint8_t *data = get_data_ma();      //rutina de magnetic_app
             for(int i = 0; i<8; i++)
                 current_id[i] = data[i];                  
@@ -226,28 +233,23 @@ void plus_one(State_Type** p_state)
         current_digit = 0;
     else
         current_digit++;
-        printf("digito: %d \n", current_digit);
     
 
     if(valid_id == false)
     {
-        char s[8] = {0};
-        int n = 0;
-        for (int i = 0; i < 8; i++) {
-            n += sprintf (&s[n], "%d", current_id[i]);
-        }
-        s[index] = current_digit;
-        printLED(s);
+        uint8_t current_id_and_digit[8];
+        for(int i=0;i<8;i++)
+        	current_id_and_digit[i]= current_id[i];
+        current_id_and_digit[index] = current_digit;
+    	display_data(current_id_and_digit,index);
     }
     else
     {
-        char s[4] = {0};
-        int n = 0;
-        for (int i = 0; i < 8; i++) {
-            n += sprintf (&s[n], "%d", current_pin[i]);
-        }
-        s[index] = current_digit;
-        printLED(s);
+        uint8_t current_pin_and_digit[4];
+        for(int i=0;i<4;i++)
+        	current_pin_and_digit[i]= current_pin[i];
+        current_pin_and_digit[index] = current_digit;
+        display_secret_data(current_pin_and_digit,index);
     }
 }
 void minus_one(State_Type** p_state)
@@ -256,43 +258,31 @@ void minus_one(State_Type** p_state)
         current_digit = 9;
     else
         current_digit--;
-        printf("digito: %d \n", current_digit);
 
     if(valid_id == false)
     {
-        char s[8] = {0};
-        int n = 0;
-        for (int i = 0; i < 8; i++) {
-            n += sprintf (&s[n], "%d", current_id[i]);
-        }
-        s[index] = current_digit;
-        printLED(s);
+        uint8_t current_id_and_digit[8];
+        for(int i=0;i<8;i++)
+        	current_id_and_digit[i]= current_id[i];
+        current_id_and_digit[index] = current_digit;
+    	display_data(current_id_and_digit,index);
     }
     else
     {
-        char s[4] = {0};
-        int n = 0;
-        for (int i = 0; i < 8; i++) {
-            n += sprintf (&s[n], "%d", current_pin[i]);
-        }
-        s[index] = current_digit;
-        printLED(s);
+        uint8_t current_pin_and_digit[4];
+        for(int i=0;i<4;i++)
+        	current_pin_and_digit[i]= current_pin[i];
+        current_pin_and_digit[index] = current_digit;
+        display_secret_data(current_pin_and_digit,index);
     }
 }
 void input_confirm_id(State_Type** p_state)
 {
-    printf("digito seleccionado: %d \n", current_digit);
+
     current_id[index] = current_digit;
     current_digit = 0;
 
-    char s[8] = {0};
-    int n = 0;
-    for (int i = 0; i < 8; i++) {
-        n += sprintf (&s[n], "%d", current_id[i]);
-    }
-    s[index] = current_digit;
-    printLED(s);
-
+    display_data(current_id,index);
 
     if(index == 7)
     {
@@ -306,17 +296,11 @@ void input_confirm_id(State_Type** p_state)
 }
 void input_confirm_pin(State_Type** p_state)
 {
-    printf("digito seleccionado: %d \n", current_digit);
+
     current_pin[index] = current_digit;
     current_digit = 0;
 
-    char s[4] = {0};
-    int n = 0;
-    for (int i = 0; i < 8; i++) {
-        n += sprintf (&s[n], "%d", current_pin[i]);
-    }
-    s[index] = current_digit;
-    printLED(s);
+    display_secret_data(current_pin,index);
 
     if(index == 3)
     {
@@ -362,11 +346,31 @@ void validation(State_Type** p_state)
             }
             else
             {
-                valid_id = true;
-                printLED("ID APPROVED. ENTER PIN");             //llamado a rutina de sevenseg
-                index = 0;
+                if(modifying == true && !validateAdmin(id_index)) //si estoy modificando pero el user no es admin
+                {
+                    printLED("USER IS NOT ADMIN. EXITING");
+                    modifying = false;
+                    clean(p_state);
+                    *p_state = access;
+                }
+                else    //si no estoy modificando o el user si es admin
+                {
+                    if (isUserBlocked(id_index))
+                    {
+                        printLED("USER IS BLOCKED. CONTACT ADMIN");
+                        modifying = false;
+                        clean(p_state);
+                        *p_state = access;
+                    }
+                    else
+                    {
+                        valid_id = true;
+                        printLED("ID APPROVED. ENTER PIN");             //llamado a rutina de sevenseg
+                        index = 0;
+                        *p_state = first_pin;
+                    }
 
-                *p_state = first_pin;
+                }
             }
         }
         else
@@ -377,10 +381,12 @@ void validation(State_Type** p_state)
                 if(modifying == false)
                 {
                     printLED("HAVE A GREAT DAY");                              //llamado a rutina de sevenseg
+                    pin_attemps = 0;
                     change_led_state(GREEN);
-                    uint32_t veces = 5000000UL;                                //llamado a rutina de led rgb
+                    uint32_t veces = 60000000UL;                                //llamado a rutina de led rgb
                     while(veces--);                     //Con el delay simulamos una entrada por la puerta
                     change_led_state(BLACK);                                   //llamado a rutina de led rgb
+                    clean(p_state);
                     *p_state = access;
                 }
                 else
@@ -392,20 +398,32 @@ void validation(State_Type** p_state)
             }
             else
             {
-                printLED("INCORRET PIN. TRY AGAIN");          //llamado a rutina de sevenseg
+                pin_attemps++;
+                if(pin_attemps == 3)
+                {
+                    printLED("TOO MANY ATTEMPS. USER BLOCKED");
+                    blockUser(id_index);
+                    pin_attemps = 0;
+                    clean(p_state);
+                    modifying = false;
+                    *p_state = access;
+                }
+                else
+                {
+                    printLED("INCORRET PIN. TRY AGAIN");          //llamado a rutina de sevenseg
+                    index = 0;
+                    for(int i = 0; i < 4; i++)
+                        current_pin[i] = 0;
+                    *p_state = first_pin;
+                }
                 change_led_state(RED);                        //llamado a rutina de led rgb
-                index = 0;
-                for(int i = 0; i < 4; i++)
-                    current_pin[i] = 0;
-
-                *p_state = first_pin;
             }
         }
     }
 
     else if (admin_state == ADD)
     {
-        if(*p_state != fourth_pin)
+        if(index != 3) //si recien tengo el id (si recien puse el id va a estar en 7, si puse la tarjeta va a estar en 0)
         {
             printLED("INPUT PIN TO ADD");
             index = 0;
@@ -422,7 +440,7 @@ void validation(State_Type** p_state)
                 newUser.pin[i] = current_pin[i];
             addNewId(newUser);
             printLED("NEW USER ADDED");
-            admin_state == ACCESS;
+            admin_state = ACCESS;
             clean(p_state);
             *p_state = add_id;        
         }
@@ -459,7 +477,7 @@ void validation(State_Type** p_state)
         }
         else
         {
-            if(*p_state != fourth_pin)
+            if(index != 3)  //si recien tengo el id (si recien puse el id va a estar en 7, si puse la tarjeta va a estar en 0)
             {
                 printLED("INPUT NEW PIN");
                 index = 0;
@@ -471,10 +489,28 @@ void validation(State_Type** p_state)
             {
                 modifyPin(id_index, current_pin);
                 printLED("PIN MODIFIED");
-                admin_state == ACCESS;
+                admin_state = ACCESS;
                 clean(p_state);
                 *p_state = add_id;        
             }
         }
     }
+    else if (admin_state == UNBLOCK)
+    {
+        int id_index = validateId(current_id);
+        if(id_index == INVALID_ID)
+        {
+            printLED("USER DOESNT EXIST");
+            for(int i = 0; i < 8; i++)
+                current_id[i] = 0;
+        }
+        else
+        {
+            unblockUser(id_index);
+            admin_state = ACCESS;
+            clean(p_state);
+            *p_state = add_id;
+        }
+    }
 }
+

@@ -35,9 +35,9 @@ static User database[MAX_USERS];
 /* Function that gets card ID from card reader */
 int validateId(uint8_t enteredId[8])
 {
-    for(int i = 0; i < sizeof(database); i++)
+    for(int i = 0; i < nOfUsers; i++)
     {
-        if(compareArrays(database[i].id, enteredId, sizeof(database[i].id)))
+        if(compareArrays(database[i].id, enteredId, 8))
             return i;
     }
     return INVALID_ID;
@@ -45,10 +45,32 @@ int validateId(uint8_t enteredId[8])
 
 bool validatePin(int userIndex, uint8_t enteredPin[4])
 {
-    if(compareArrays(database[userIndex].pin, enteredPin, sizeof(database[userIndex].pin)))
+    if(compareArrays(database[userIndex].pin, enteredPin, 4))
         return true;
     else
         return false;
+}
+
+bool validateAdmin(int userIndex)
+{
+    if(database[userIndex].admin)
+        return true;
+    else
+        return false;
+}
+
+void blockUser(int userIndex)
+{
+    database[userIndex].blocked = true;
+}
+void unblockUser(int userIndex)
+{
+    database[userIndex].blocked = false;
+}
+
+bool isUserBlocked(int userIndex)
+{
+    return database[userIndex].blocked;
 }
 
 /* Function that adds new user to system database */
@@ -56,7 +78,7 @@ bool addNewId(User newUser)
 {
     if(nOfUsers == MAX_USERS)
     {
-        printf("The database is full");
+        //printf("The database is full");
         return false;
     }
     else
@@ -69,7 +91,7 @@ bool addNewId(User newUser)
 
 void deleteUser(int userIndex)
 {
-    for(int i = userIndex; i < nOfUsers-1; i++)
+    for(int i = userIndex; i < nOfUsers; i++)
     {
         database[i].admin = database[i+1].admin;
         for(int j = 0; j < 8; j++)

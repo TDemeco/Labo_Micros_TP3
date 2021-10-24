@@ -30,9 +30,9 @@
  ******************************************************************************/
 
 State_Type* fsm(State_Type *p_table , encoderBoardAppEvents event){ // Puntero al estado actual , Evento recibido
-  printf(" >>%c<<\n ",event);         // just for test (debug)
+  //printf(" >>%c<<\n ",event);         // just for test (debug)
   
-  // 1-Recorremos las tabla de estado ( Ej estado_0) hasta encontrar el arco que contenga el evento actual
+  // 1-Recorremos las tabla de estado ( Ej estado_0) hasta encontrar el arco que contenga el evento actual 
   while (p_table -> event != event && p_table -> event != EOT)
     p_table++;
   

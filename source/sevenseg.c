@@ -223,6 +223,11 @@ static uint8_t scroll_mode = OFF;
 static uint8_t string_length = 0;
 static uint8_t blink_mode = 0;
 
+static uint8_t inx = 0;
+static uint8_t pos = 0;
+static uint32_t scroll = 0;
+static uint32_t blink = 0;
+
 /*******************************************************************************
  *******************************************************************************
                         GLOBAL FUNCTION DEFINITIONS
@@ -241,6 +246,10 @@ void display_init(void)
 
 void display_text(char* text, sevenseg_modes mode, uint8_t blinking_char)
 {
+	inx = 0;
+	pos = 0;
+	scroll = 0;
+	blink = 0;
 	blink_mode = blinking_char;
 
     switch (mode)
@@ -272,11 +281,6 @@ void display_text(char* text, sevenseg_modes mode, uint8_t blinking_char)
 
 void display_refresh(void)
 {
-  static uint8_t inx = 0;
-  static uint8_t pos = 0;
-  static uint32_t scroll = 0;
-  static uint32_t blink = 0;
-
   if(pos > brightness){pos = 0;}
 
   if((scroll_mode == ON) && (scroll > SCROLL_TIME))
