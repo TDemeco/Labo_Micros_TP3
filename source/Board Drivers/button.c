@@ -8,7 +8,7 @@
  * INCLUDE HEADER FILES
  ******************************************************************************/
 
-#include "board.h"
+#include "header/board.h"
 #include "gpio.h"
 #include "button.h"
 #include "timer.h"
