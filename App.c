@@ -52,7 +52,33 @@ void App_Init (void)
 /* Función que se llama constantemente en un ciclo infinito */
 void App_Run (void)
 {
-	  System_Events event = get_next_event();
+    System_Events event;
+    char newChar = getchar();
+    switch(newChar)
+    {
+      case 'l':
+        event = PRESSED_L;
+        break;
+      case 'r':
+        event = PRESSED_R;
+        break;
+      case 'p':
+        event = PRESSED_P;
+        break;
+      case 'd':
+        event = DATA_CHANGE;
+        break;
+      case 'n':
+        event = NODE_UPDATE;
+        break;
+      case 'u':
+        event = LED_UPDATE;
+        break;
+      default:
+        event = NO_EVENT;
+        break;
+    }
+	  //System_Events event = get_next_event();
 	  p2state = fsm(p2state, event);
 }
 
