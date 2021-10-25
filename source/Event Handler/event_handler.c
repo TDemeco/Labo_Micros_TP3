@@ -47,7 +47,6 @@ void add_to_queue(System_Events newEvent);
  ******************************************************************************/
 
 void event_handler_init(void){												//INITIALIZATION OF EVENT HANDLER
-	printf("Inicializando event handler...\n");
 	beginEvent = 0;															//starts the queue
 	endEvent = 0;
 
@@ -62,10 +61,9 @@ void event_handler_init(void){												//INITIALIZATION OF EVENT HANDLER
 
 	ESP8266_UART_init();													//initializes UART comms
 
-	printf("Inicializacion de event handler completada!\n");
-	//timerInit();															//initializes timers driver
-	//tim_id_t timer_id = timerGetId();
-	//timerStart(timer_id, 5, TIM_MODE_PERIODIC, update_events);			//initializes a periodic timer to check for events (and update node-RED ui)
+	timerInit();															//initializes timers driver
+	tim_id_t timer_id = timerGetId();
+	timerStart(timer_id, 5, TIM_MODE_PERIODIC, update_events);			//initializes a periodic timer to check for events (and update node-RED ui)
 }
 
 System_Events get_next_event(void){											//NEXT EVENT GETTER
@@ -85,7 +83,7 @@ System_Events get_next_event(void){											//NEXT EVENT GETTER
  *******************************************************************************
  ******************************************************************************/
 
-/*void update_events(void){						//EVENT UPDATER (called every 5ms)
+void update_events(void){						//EVENT UPDATER (called every 5ms)
 	
 	static int counter = 0;
 	if(counter++ == 1)							//Every 10ms we update led position and Node-RED ui
@@ -120,7 +118,7 @@ System_Events get_next_event(void){											//NEXT EVENT GETTER
 	{
 		add_to_queue(DATA_CHANGE);
 	}
-}*/
+}
 
 void add_to_queue(System_Events newEvent){
 	eventQueue[endEvent++] = newEvent;

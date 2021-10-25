@@ -23,8 +23,8 @@
  * CONSTANT AND MACRO DEFINITIONS USING #DEFINE
  ******************************************************************************/
 typedef struct{
-	uint16_t velX;
-	uint16_t velY;
+	float velX;
+	float velY;
 } velocity_t;
 
 typedef struct{

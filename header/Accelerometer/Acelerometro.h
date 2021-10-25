@@ -35,9 +35,9 @@
 
 
 typedef struct{
-    uint16_t accel_x;
-	uint16_t accel_y;
-	uint16_t accel_z;
+    float accel_x;
+	float accel_y;
+	float accel_z;
 } accel_t;
 
 
@@ -47,9 +47,9 @@ void Accelerometro_Init(void);
 void Acelerometro_enable(void);
 void Acelerometro_disable(void);
 
-uint16_t Acelerometro_getXint(void);
-uint16_t Acelerometro_getYint(void);
-uint16_t Acelerometro_getZint(void);
+float Acelerometro_getXint(void);
+float Acelerometro_getYint(void);
+float Acelerometro_getZint(void);
 
 accel_t get_accelerations(void);
 

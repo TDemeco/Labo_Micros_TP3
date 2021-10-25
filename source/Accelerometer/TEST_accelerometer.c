@@ -20,15 +20,15 @@ void Acelerometro_disable(void)
 }
 
 
-uint16_t Acelerometro_getXint(void)
+float Acelerometro_getXint(void)
 {
     return accelerations.accel_x;
 }
-uint16_t Acelerometro_getYint(void)
+float Acelerometro_getYint(void)
 {
     return accelerations.accel_y;
 }
-uint16_t Acelerometro_getZint(void)
+float Acelerometro_getZint(void)
 {
     return accelerations.accel_z;
 }
