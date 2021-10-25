@@ -8,7 +8,7 @@
 #ifndef SOURCES_ACELEROMETRO_H_
 #define SOURCES_ACELEROMETRO_H_
 
-#include "I2C.h"
+////////#include "I2C.h"
 /*****************************************Definiciones segun hoja de datos*******************************************/
 // FXOS8700CQ I2C Direcciones
 #define FXOS8700CQ_SLAVE_ADDR0 (0x1E<<1) // with pins SA0=0, SA1=0
@@ -33,17 +33,25 @@
 #define FXOS8700Q_WHOAMI_VAL 0xC7
 
 
+
+typedef struct{
+    uint16_t accel_x;
+	uint16_t accel_y;
+	uint16_t accel_z;
+} accel_t;
+
+
 /* ***************************************Funciones************************************************/
 
-	void Accelerometro_Init ();
-    void Acelerometro_enable(void) ;
-    void Acelerometro_disable(void) ;
+void Accelerometro_Init(void);
+void Acelerometro_enable(void);
+void Acelerometro_disable(void);
 
-    uint32_t Acelerometro_whoAmI_test(void);				//función para debuguear la comunicación I2C
+uint16_t Acelerometro_getXint(void);
+uint16_t Acelerometro_getYint(void);
+uint16_t Acelerometro_getZint(void);
 
-    void Acelerometro_getXint(int16_t *x)  ;
-    void Acelerometro_getYint(int16_t *y)  ;
-    void Acelerometro_getZint(int16_t *z)  ;
+accel_t get_accelerations(void);
 
 
 #endif

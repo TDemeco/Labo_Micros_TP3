@@ -1,11 +1,11 @@
 /***************************************************************************//**
-  @file     FSM.h
-  @brief    //
-  @author  Matias Tripoli
+  @file     potenciometro.h
+  @brief    TEST ONLY - Potenciometer interface
+  @author   Tobias Demeco
  ******************************************************************************/
 
-#ifndef _FSMCALL_H_
-#define _FSMCALL_H_
+#ifndef _POTE_H_
+#define _POTE_H_
 
 /*******************************************************************************
  * INCLUDE HEADER FILES
@@ -13,8 +13,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include <stdio.h>
-#include "FSM.h"
+
 
 /*******************************************************************************
  * CONSTANT AND MACRO DEFINITIONS USING #DEFINE
@@ -23,6 +22,8 @@
 /*******************************************************************************
  * ENUMERATIONS AND STRUCTURES AND TYPEDEFS
  ******************************************************************************/
+
+typedef uint16_t pote_t;
 
 /*******************************************************************************
  * VARIABLE PROTOTYPES WITH GLOBAL SCOPE
@@ -33,47 +34,24 @@
  ******************************************************************************/
 
 /**
- * @brief Does nothing
+ * @brief initializes potenciometer
+ * @return nothing
  */
-void nothing(State_Type** p_state);
-
-
-/*** Movement functions ***/
-/**
- * @brief Moves LED up a position
- */
-void move_up(State_Type** p_state);
+void pote_init(void);
 
 /**
- * @brief Moves LED down a position
+ * @brief reads value of potenciometer
+ * @return current value of potenciometer
  */
-void move_down(State_Type** p_state);
+pote_t pote_read(void);
 
 /**
- * @brief Moves LED left one position
+ * @brief changes value of virtual potenciometer (TEST ONLY)
+ * @param newValue new value of potenciometer
+ * @return nothing
  */
-void move_left(State_Type** p_state);
+void pote_write(pote_t newValue);
+/*******************************************************************************
+ ******************************************************************************/
 
-/**
- * @brief Moves LED right one position
- */
-void move_right(State_Type** p_state);
-
-
-/*** Data updating ***/
-/**
- * @brief Updates data obtained from Node-RED
- */
-void update_data(State_Type** p_state);
-
-/**
- * @brief Updates node-RED ui with newest data
- */
-void update_node_ui(State_Type** p_state);
-
-/**
- * @brief Updates led position and velocity
- */
-void update_led(State_Type** p_state);
-
-#endif // _FSMCALL_H_
+#endif // _POTE_H_

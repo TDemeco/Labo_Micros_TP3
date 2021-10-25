@@ -26,10 +26,12 @@
 /*******************************************************************************
  * ENUMERATIONS AND STRUCTURES AND TYPEDEFS
  ******************************************************************************/
+
+
 typedef struct state_diagram_edge State_Type;
 struct state_diagram_edge
 {
-  encoderBoardAppEvents event;
+  System_Events event;
   State_Type *next_state;
   void (*p_action)(State_Type** p_table);
 };
@@ -47,7 +49,7 @@ struct state_diagram_edge
  * @param mode INPUT, OUTPUT, INPUT_PULLUP or INPUT_PULLDOWN.
  */
 
-State_Type* fsm(State_Type *p_table , encoderBoardAppEvents event);
+State_Type* fsm(State_Type *p_table , System_Events event);
 
 /*******************************************************************************
  ******************************************************************************/

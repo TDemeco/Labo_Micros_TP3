@@ -13,6 +13,8 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "header/Potenciometer/potenciometer.h"
+#include "header/rgb.h"
 
 
 /*******************************************************************************
@@ -24,17 +26,17 @@
  ******************************************************************************/
 
 typedef struct {
-	color_t color;
+	//From ESP to K64
+	color_t led_color;
 	bool new_pixel;
 	bool destroy_pixel;
 	uint8_t brightness;
-	uint16_t pot;
-	float accel_x;
-	float accel_y;
-	float accel_z;
+	//From K64 to ESP
+	pote_t pot;
+	uint16_t accel_x;
+	uint16_t accel_y;
+	uint16_t accel_z;
 } ESP_data;				//There can be up to 5 UART communications
-
-
 
 /*******************************************************************************
  * VARIABLE PROTOTYPES WITH GLOBAL SCOPE
@@ -63,6 +65,13 @@ void ESP8266_parse_msg(ESP_data* data);
  * @return
  */
 void ESP8266_send_data(ESP_data* data);
+
+/**
+ * @brief informs on new data from the ESP8266
+ * @param
+ * @return whether or not there is new data from the ESP8266
+ */
+bool new_ESP_data_available();
 /*******************************************************************************
  ******************************************************************************/
 

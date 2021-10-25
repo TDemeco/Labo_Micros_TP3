@@ -29,14 +29,12 @@ typedef enum{
 	NO_JOYSTICK_EVENT,
 	INVALID_SPI_JOYSTICK_EVENT,
 	SPI_JOYSTICK_L_PRESS,
-	SPI_JOYSTICK_L_RELEASE,
 	SPI_JOYSTICK_R_PRESS,
-	SPI_JOYSTICK_R_RELEASE,
 	SPI_JOYSTICK_P_PRESS,
-	SPI_JOYSTICK_P_RELEASE,
 	END_OF_SPI_JOYSTICK_QUEUE
 }SPI_Joystick_Events;
 
+typedef uint8_t joystickID;
 
 /*******************************************************************************
  * VARIABLE PROTOTYPES WITH GLOBAL SCOPE
@@ -60,7 +58,7 @@ void spiJoystickInit();
  * @param id: The SPI use by the new joystick
  * @return ID for a new encoder, will return -1 if it couldn't create new joystick;
  */
-joystickID getSpiJoystickID(SPI_id id);
+joystickID getSpiJoystickID(void);
 
 
 /**

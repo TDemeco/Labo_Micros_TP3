@@ -24,6 +24,11 @@
 /*******************************************************************************
  * ENUMERATIONS AND STRUCTURES AND TYPEDEFS
  ******************************************************************************/
+typedef struct{
+  uint8_t row;
+  uint8_t col;
+} led_pos_t;
+
 
 typedef struct{
 	uint8_t r;
