@@ -50,7 +50,7 @@ void event_handler_init(void){												//INITIALIZATION OF EVENT HANDLER
 	beginEvent = 0;															//starts the queue
 	endEvent = 0;
 
-	spiJoystickInit();														//initializes SPI joystick
+	spiJoystickInit(SPI_BITR, SPI_BITL, SPI_BITP);							//initializes SPI joystick (change constants in event_handler.h acording to connection)
 	joy_id = getSpiJoystickID();
 	enableSpiJoystick(joy_id);
 

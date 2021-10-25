@@ -42,6 +42,8 @@ static ESP_data ledData = {255, 0, 0, false, false, 50, 50, 0, 0, 0};	   //led d
 static led_pos_t ledPosition = {3, 3};				    //led position
 static velocity_t ledVelocity = {0, 0};				    //led velocity
 static accel_t ledAccelerations = {0, 0, 0};			//variable for quick access to acceleration values
+static uint8_t lastPoteReading = 50;
+
 
 
 /*******************************************************************************
@@ -64,6 +66,12 @@ void update_node_ui(State_Type** p_state)
     ledData.accel_z = ledAccelerations.accel_z;
 
     ledData.pot = pote_read();                      //updates potenciometer reading
+
+    if(lastPoteReading != ledData.pot)              //if potenciometer has changed since last measurement
+    {
+        ledData.brightness = ledData.pot;           //update brightness
+        lastPoteReading = ledData.pot;              //update last reading with current one for next call
+    }
 
     ESP8266_send_data(&ledData);
 
@@ -113,8 +121,12 @@ void update_data(State_Type** p_state)
     ESP_data dummy;
     ESP8266_parse_msg(&dummy);
 
-    ledData.led_color = dummy.led_color;
-    ledData.brightness = dummy.brightness;
+    if(dummy.rgb.r != 0 || dummy.rgb.g != 0 || dummy.rgb.b != 0)
+        ledData.rgb = dummy.rgb;
+    if(dummy.brightness != 0)
+    {
+        ledData.brightness = dummy.brightness;
+    }
     return;
 }
 
@@ -148,6 +160,6 @@ void update_led(void){				//WILL PROBABLY HAVE TO UPDATE THIS FUNCTION (TO ADD A
 	ledVelocity.velX += ledAccelerations.accel_x;	//update led velocities acording to accelerations
 	ledVelocity.velY += ledAccelerations.accel_y;
 
-    LED_matrix_app_dot(ledPosition.row, ledPosition.col, ledData.led_color);	//show current led
+    LED_matrix_app_dot(ledPosition.row, ledPosition.col, ledData.rgb);	//show current led
 	LED_matrix_app_brightness(ledData.brightness);								//set current brightness
 }

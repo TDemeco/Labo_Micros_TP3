@@ -1,4 +1,4 @@
-#include "header/Node-RED/ESP8266_UART.h"
+/*#include "header/Node-RED/ESP8266_UART.h"
 
 void ESP8266_UART_init(void)
 {
@@ -16,4 +16,4 @@ bool new_ESP_data_available()
 {
     printf("Hay info nueva en el ESP? No :(\n");
     return false;
-}
+}*/
