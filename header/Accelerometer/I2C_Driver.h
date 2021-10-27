@@ -15,7 +15,7 @@
 #include <stdbool.h>
 #include "MK64F12.h"
 #include "hardware.h"
-#include "header/Board Drivers/gpio.h"
+#include "drivers/MCAL/gpio/gpio.h"
 
 
 /*******************************************************************************
@@ -67,6 +67,6 @@ typedef struct {
 void I2C_Init(void);
 void I2C_Communication_Config(bool rnotw, uint32_t s_addr, uint8_t* w_q, uint8_t* r_q, uint8_t w_q_s, uint8_t r_q_s);
 I2C_State_Type I2C_get_State(void);
-void i2cOnFinished(I2C_Callback_Type callback);
+void I2C_End_Routine(I2C_Callback_Type callback);
 
 #endif // _I2C_DRIVER_H_

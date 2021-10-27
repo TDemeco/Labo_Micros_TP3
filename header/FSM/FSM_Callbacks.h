@@ -19,7 +19,7 @@
 /*******************************************************************************
  * CONSTANT AND MACRO DEFINITIONS USING #DEFINE
  ******************************************************************************/
-#define VEL_SCALAR 16000          //Position moves 1/16000 of velocity (calibration: gravity should move the pixel from stop to next led in 400ms)
+#define VEL_SCALAR 6000          //Position moves 1/6000 of velocity (calibration: gravity should move the pixel from stop to next led in 300ms)
 /*******************************************************************************
  * ENUMERATIONS AND STRUCTURES AND TYPEDEFS
  ******************************************************************************/

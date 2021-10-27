@@ -135,7 +135,7 @@ I2C_State_Type I2C_get_State(void){
 	return state;
 }
 
-void i2cOnFinished(I2C_Callback_Type callback){
+void I2C_End_Routine(I2C_Callback_Type callback){
 	i2c_com.end_routine = callback;
 }
 /*******************************************************************************
@@ -161,7 +161,7 @@ void I2C_ISR_FSM(void){		// FSM-ish
 							if(i2c_com.read_queue_size == 1){		// Only 1?
 								I2C0->C1 = (I2C0->C1 & ~I2C_C1_TXAK_MASK) | I2C_C1_TXAK(1);		// Send NACK
 							}
-							(void)I2C0->D;		// Read D to advance
+							I2C0->D;		// Read D to advance
 						}
 						else{		// not Reading yet?
 							I2C0->C1 = (I2C0->C1 & ~I2C_C1_RSTA_MASK) | I2C_C1_RSTA(1);		// Transmit Repeated Start
@@ -171,7 +171,6 @@ void I2C_ISR_FSM(void){		// FSM-ish
 					}
 				}
 				else{		// Nothing to Read
-					//I2C0->C1 = (I2C0->C1 & ~I2C_C1_MST_MASK) | I2C_C1_MST(0);	// Disable Master Mode
 					i2c_com.state = I2C_END;
 					I2C0->C1 = (I2C0->C1 & ~I2C_C1_MST_MASK) | I2C_C1_MST(0);
 					i2c_com.end_routine();
