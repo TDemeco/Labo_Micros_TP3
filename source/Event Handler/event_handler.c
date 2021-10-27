@@ -11,7 +11,7 @@
 #include "header/Event Handler/event_handler.h"
 
 #include "header/Joystick/SPI_joystick.h"
-#include "header/Accelerometer/Acelerometro.h"
+#include "header/Accelerometer/FXOS8700CQ.h"
 #include "header/Potenciometer/potenciometer.h"
 
 #include "header/Board Drivers/timer.h"
@@ -56,14 +56,13 @@ void event_handler_init(void){												//INITIALIZATION OF EVENT HANDLER
 
 	pote_init();															//initializes potenciometer for reading
 
-	Accelerometro_Init();													//initializes accelerometer readings
-	Acelerometro_enable();
+	FXOS8700CQ_Init();														//initializes accelerometer readings
 
 	ESP8266_UART_init();													//initializes UART comms
 
 	timerInit();															//initializes timers driver
 	tim_id_t timer_id = timerGetId();
-	timerStart(timer_id, 5, TIM_MODE_PERIODIC, update_events);			//initializes a periodic timer to check for events (and update node-RED ui)
+	timerStart(timer_id, 5, TIM_MODE_PERIODIC, update_events);				//initializes a periodic timer to check for events (and update node-RED ui)
 }
 
 System_Events get_next_event(void){											//NEXT EVENT GETTER

@@ -14,7 +14,7 @@
 #include "header/Event Handler/event_handler.h"
 #include "header/Node-RED/ESP8266_UART.h"
 #include "header/Potenciometer/potenciometer.h"
-#include "header/Accelerometer/Acelerometro.h"
+#include "header/Accelerometer/FXOS8700CQ.h"
 #include "header/LED Matrix/LED_matrix_app.h"
 
 
@@ -23,8 +23,8 @@
  * CONSTANT AND MACRO DEFINITIONS USING #DEFINE
  ******************************************************************************/
 typedef struct{
-	float velX;
-	float velY;
+	int16_t velX;
+	int16_t velY;
 } velocity_t;
 
 typedef struct{
@@ -41,7 +41,7 @@ typedef struct{
 static ESP_data ledData = {255, 0, 0, false, false, 50, 50, 0, 0, 0};	   //led data (color, brightness, acceleration)
 static led_pos_t ledPosition = {3, 3};				    //led position
 static velocity_t ledVelocity = {0, 0};				    //led velocity
-static accel_t ledAccelerations = {0, 0, 0};			//variable for quick access to acceleration values
+static Acceleration_Type ledAccelerations = {0, 0, 0};			//variable for quick access to acceleration values
 static uint8_t lastPoteReading = 50;
 
 
@@ -60,10 +60,10 @@ void nothing(State_Type** p_state)
 
 void update_node_ui(State_Type** p_state)
 {
-    ledAccelerations = get_accelerations();         //updates accelerations
-    ledData.accel_x = ledAccelerations.accel_x;
-    ledData.accel_y = ledAccelerations.accel_y;
-    ledData.accel_z = ledAccelerations.accel_z;
+    ledAccelerations = FXOS8700CQ_get_Acceleration();         //updates accelerations
+    ledData.accel_x = ledAccelerations.x;
+    ledData.accel_y = ledAccelerations.y;
+    ledData.accel_z = ledAccelerations.z;
 
     ledData.pot = pote_read();                      //updates potenciometer reading
 
@@ -156,9 +156,9 @@ void update_led(void){				//WILL PROBABLY HAVE TO UPDATE THIS FUNCTION (TO ADD A
 		ledPosition.col = 7;
 	}
 
-	ledAccelerations = get_accelerations();			//update accelerations
-	ledVelocity.velX += ledAccelerations.accel_x;	//update led velocities acording to accelerations
-	ledVelocity.velY += ledAccelerations.accel_y;
+	ledAccelerations = FXOS8700CQ_get_Acceleration();			//update accelerations
+	ledVelocity.velX += ledAccelerations.x;	                    //update led velocities acording to accelerations
+	ledVelocity.velY += ledAccelerations.y;
 
     LED_matrix_app_dot(ledPosition.row, ledPosition.col, ledData.rgb);	//show current led
 	LED_matrix_app_brightness(ledData.brightness);								//set current brightness
