@@ -8,9 +8,9 @@
  * INCLUDE HEADER FILES
  ******************************************************************************/
 
-#include "drivers/MCAL/i2c/I2C_Driver.h"
+#include "header/Accelerometer/I2C_Driver.h"
 #include "FXOS8700CQ.h"
-#include "HAL/timer/timer.h"
+#include "header/Board Drivers/timer.h"
 
 /*******************************************************************************
  * CONSTANT AND MACRO DEFINITIONS USING #DEFINE
@@ -194,6 +194,8 @@ static void FXOS8700CQ_Run(bool reset){
 	case 6:
 		module.accel[(module.index + 1) % 2].z |= (module.I2C_read_queue[1]);		// Save Accel Z LSB
 		module.accel[(module.index + 1) % 2].z >>= 2;
+		module.accel_buffer[1] = module.accel_buffer[0];
+		module.accel_buffer[0] = module.accel[1];
 		module.done = true;		// done flag
 		break;
 	default:
@@ -219,27 +221,27 @@ bool FXOS8700CQ_Is_Running(void){
 Acceleration_Type FXOS8700CQ_get_Acceleration(void){
 	Acceleration_Type a = {0,0,0};
 	if (module.state == FXOS8700CQ_READY)
-		a = module.accel[1];
+		a = module.accel_buffer[0];
 	return a;
 }
 
 int16_t FXOS8700CQ_get_Accel_x(void){
 	int16_t ax = 0;
 	if (module.state == FXOS8700CQ_READY)
-		ax = module.accel[1].x;
+		ax = module.accel_buffer[0].x;
 	return ax;
 }
 
 int16_t FXOS8700CQ_get_Accel_y(void){
 	int16_t ay = 0;
 	if (module.state == FXOS8700CQ_READY)
-		ay = module.accel[1].y;
+		ay = module.accel_buffer[0].y;
 	return ay;
 }
 
 int16_t FXOS8700CQ_get_Accel_z(void){
 	int16_t az = 0;
 	if (module.state == FXOS8700CQ_READY)
-		az = module.accel[1].z;
+		az = module.accel_buffer[0].z;
 	return az;
 }

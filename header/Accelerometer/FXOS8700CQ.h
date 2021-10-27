@@ -42,6 +42,7 @@ typedef  struct{
 	FXOS8700CQ_State_Type state;
 	FXOS8700CQ_Config_Type config;
 	Acceleration_Type accel[2];
+	Acceleration_Type accel_buffer[2];
 	uint8_t I2C_read_queue[2];
 	uint8_t I2C_write_queue[2];
 	uint32_t step;
