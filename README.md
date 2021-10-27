@@ -1,1 +1,3 @@
-# Labo_Micros_TP2_App
+# Laboratorio de Microprocesadores
+# Trabajo Practico 3
+# Leeme
