@@ -157,8 +157,8 @@ void update_led(void){				//WILL PROBABLY HAVE TO UPDATE THIS FUNCTION (TO ADD A
 	}
 
 	ledAccelerations = FXOS8700CQ_get_Acceleration();			//update accelerations
-	ledVelocity.velX += ledAccelerations.x;	                    //update led velocities acording to accelerations
-	ledVelocity.velY += ledAccelerations.y;
+	ledVelocity.velX += (ledAccelerations.x/ACCEL_SCALAR);	    //update led velocities acording to accelerations
+	ledVelocity.velY += (ledAccelerations.y/ACCEL_SCALAR);
 
     LED_matrix_app_dot(ledPosition.row, ledPosition.col, ledData.rgb);	//show current led
 	LED_matrix_app_brightness(ledData.brightness);								//set current brightness
