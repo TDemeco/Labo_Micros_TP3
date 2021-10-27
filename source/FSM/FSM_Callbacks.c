@@ -23,8 +23,8 @@
  * CONSTANT AND MACRO DEFINITIONS USING #DEFINE
  ******************************************************************************/
 typedef struct{
-	int16_t velX;
-	int16_t velY;
+	int32_t velX;
+	int32_t velY;
 } velocity_t;
 
 typedef struct{
@@ -43,6 +43,7 @@ static led_pos_t ledPosition = {3, 3};				    //led position
 static velocity_t ledVelocity = {0, 0};				    //led velocity
 static Acceleration_Type ledAccelerations = {0, 0, 0};			//variable for quick access to acceleration values
 static uint8_t lastPoteReading = 50;
+static uint16_t speed_counter = 0;
 
 
 
@@ -132,33 +133,36 @@ void update_data(State_Type** p_state)
 
 void update_led(void){				//WILL PROBABLY HAVE TO UPDATE THIS FUNCTION (TO ADD A MULTIPLICATIVE FACTOR TO ACCELERATION)
 
-	ledPosition.row += ledVelocity.velX;		//update led row position in matrix
-	if(ledPosition.row <= 0)					//left wall
-	{
-		ledVelocity.velX = 0;
-		ledPosition.row = 0;
-	}
-	if(ledPosition.row >= 7)					//right wall
-	{
-		ledVelocity.velX = 0;
-		ledPosition.row = 7;
-	}
+    if(speed_counter < 10)                                  //update led position, velocities and accelerations every 100ms
+        speed_counter++;
+    else{
+        ledPosition.row += ledVelocity.velX/VEL_SCALAR;		//update led row position in matrix
+        if(ledPosition.row <= 0)					        //left wall
+        {
+            ledVelocity.velX = 0;
+            ledPosition.row = 0;
+        }
+        if(ledPosition.row >= 7)					        //right wall
+        {
+            ledVelocity.velX = 0;
+            ledPosition.row = 7;
+        }
 
-	ledPosition.col += ledVelocity.velY;		//update led column position in matrix
-	if(ledPosition.col <= 0)					//floor
-	{
-		ledVelocity.velY = 0;
-		ledPosition.col = 0;
-	}
-	if(ledPosition.col >= 7)					//ceiling
-	{
-		ledVelocity.velY = 0;
-		ledPosition.col = 7;
-	}
-
-	ledAccelerations = FXOS8700CQ_get_Acceleration();			//update accelerations
-	ledVelocity.velX += (ledAccelerations.x/ACCEL_SCALAR);	    //update led velocities acording to accelerations
-	ledVelocity.velY += (ledAccelerations.y/ACCEL_SCALAR);
+        ledPosition.col += ledVelocity.velY/VEL_SCALAR;	    //update led column position in matrix
+        if(ledPosition.col <= 0)					        //floor
+        {
+            ledVelocity.velY = 0;
+            ledPosition.col = 0;
+        }
+        if(ledPosition.col >= 7)					        //ceiling
+        {
+            ledVelocity.velY = 0;
+            ledPosition.col = 7;
+        }
+        ledAccelerations = FXOS8700CQ_get_Acceleration();	//update accelerations
+        ledVelocity.velX += ledAccelerations.x;//update led velocities acording to accelerations
+        ledVelocity.velY += ledAccelerations.y;
+    }
 
     LED_matrix_app_dot(ledPosition.row, ledPosition.col, ledData.rgb);	//show current led
 	LED_matrix_app_brightness(ledData.brightness);								//set current brightness
